@@ -22,7 +22,7 @@ class App extends Component {
             return;
         }
         try {
-            console.log("checking session: " + this.state.checkingSession);
+            console.log("Testing - checking session: " + this.state.checkingSession);
             await auth0Client.silentAuth();
             this.forceUpdate();
         } catch (err) {

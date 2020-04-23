@@ -30,7 +30,6 @@ namespace VolunteerBoardAPI.Controllers
 
         // GET: api/Jobs/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Job>> GetJob(int id)
         {
             var job = await _context.Jobs.FindAsync(id);

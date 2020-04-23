@@ -32,8 +32,10 @@ class NewJob extends Component {
         });
 
         await axios.post('https://localhost:44316/api/jobs', {
-            zip: this.state.zip,
-            description: this.state.description,
+            PostedById: window.$currentUserId,
+            Description: this.state.description,
+            Zip: this.state.zip,
+            CreatedOn: new Date(),
         }, {
             headers: { 'Authorization': `Bearer ${auth0Client.getIdToken()}` }
         });

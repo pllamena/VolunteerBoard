@@ -5,32 +5,20 @@ import auth0Client from '../../Auth';
 class AcceptJob extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            accepted: false,
-        };
-    }
-
-    updateAccepted(value) {
-        this.setState({
-            accepted: value,
-        });
     }
 
     submit() {
-        this.setState({
-            accepted: true,
-        });
-        this.props.acceptJob(this.state.accepted);
+        this.props.acceptJob();
     }
 
     render() {
-        if (!auth0Client.isAuthenticated()) return null;
+        if (!auth0Client.isAuthenticated() || this.props.accepted) return null;
         return (
             <Fragment>
                 <button
                     className="btn btn-primary"
                     onClick={() => { this.submit() }}>
-                    Accept
+                    Volunteer
                 </button>
                 <hr className="my-4" />
             </Fragment>

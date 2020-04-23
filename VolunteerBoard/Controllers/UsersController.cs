@@ -12,7 +12,6 @@ namespace VolunteerBoardAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly VolunteerBoardContext _context;
@@ -24,6 +23,7 @@ namespace VolunteerBoardAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
+        // [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
@@ -31,9 +31,25 @@ namespace VolunteerBoardAPI.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
+        // [Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+        // GET: api/UsersUtils
+        [HttpGet]
+        [Route("ByEmail/{email}")]
+        public async Task<ActionResult<User>> GetUserByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(e => e.Email == email);
 
             if (user == null)
             {
@@ -47,6 +63,7 @@ namespace VolunteerBoardAPI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.UserId)
@@ -89,6 +106,7 @@ namespace VolunteerBoardAPI.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

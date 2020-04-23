@@ -20,18 +20,20 @@ class Job extends Component {
 
     async refreshJob() {
         const { match: { params } } = this.props;
-        const job = (await axios.get(`https://localhost:44316/api/jobs/${params.jobId}`), {
-            params: {}, 
-            headers: { 'Authorization': `Bearer ${auth0Client.getIdToken()}` }
-        }).data;
+        const job = (await axios.get(`https://localhost:44316/api/jobs/${params.jobId}`)).data;
         this.setState({
             job,
         });
     }
 
-    async acceptJob(accepted) {
+    async acceptJob() {
         await axios.put(`https://localhost:44316/api/jobs/${this.state.job.jobId}`, {
-            accepted,
+            JobId: this.state.job.jobId,
+            AcceptedById: window.$currentUserId,
+            PostedById: this.state.job.postedById,
+            Description: this.state.job.description,
+            Zip: this.state.job.zip,
+            CreatedOn: this.state.job.createdOn,
         }, {
             headers: { 'Authorization': `Bearer ${auth0Client.getIdToken()}` }
         });
@@ -45,11 +47,10 @@ class Job extends Component {
             <div className="container">
                 <div className="row">
                     <div className="jumbotron col-12">
-                        <p className="lead">{job.description}</p>
-                        <p className="lead">{job.zip}</p>
-                        <hr className="my-4" />
-                        <AcceptJob jobID={job.jobId} acceptJob={this.acceptJob} />
+                        <p>Description: {job.description}</p>
+                        <p>Area Zip: {job.zip}</p>
                         <p>Accepted: {job.acceptedBy !== null ? 'Yes' : 'No'}</p>
+                        <AcceptJob jobID={job.jobId} acceptJob={this.acceptJob} accepted={job.acceptedBy !== null} />
                     </div>
                 </div>
             </div>

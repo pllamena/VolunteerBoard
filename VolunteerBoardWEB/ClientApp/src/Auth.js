@@ -1,4 +1,5 @@
 ﻿import auth0 from 'auth0-js';
+import axios from 'axios';
 
 class Auth {
     constructor() {
@@ -51,6 +52,18 @@ class Auth {
     setSession(authResult) {
         this.idToken = authResult.idToken;
         this.profile = authResult.idTokenPayload;
+        axios.get(`https://localhost:44316/api/users/byemail/${this.profile.name}`).then(response => {
+            window.$currentUserId = response.data.userId
+        }).catch(err => {
+            axios.post('https://localhost:44316/api/users', {
+                Name: this.profile.name,
+                Email: this.profile.name
+            }, {
+                headers: { 'Authorization': `Bearer ${this.idToken}` }
+            }).then(usr => {
+                window.$currentUserId = usr.data.userId
+            });
+        });
         // set the time that the id token will expire at
         this.expiresAt = authResult.idTokenPayload.exp * 1000;
     }
